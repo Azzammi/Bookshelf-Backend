@@ -20,14 +20,13 @@ const getBooksHandler = () => {
 };
 
 const getBookByIdHandler = (request, h) => {
-  const {id} = request.params;
-
-  const book = books.filter((book) => book.id === id)[0];
+  const {bookId} = request.params;
+  const book = books.filter((book) => book.id === bookId)[0];
   if (book !== undefined) {
     return {
       status: 'success',
       data: {
-        note,
+        book,
       },
     };
   };
