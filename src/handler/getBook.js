@@ -1,9 +1,30 @@
 const books = require('../books');
 
-const getBooksHandler = () => {
+const getBooksHandler = (request, h) => {
+  const {name, reading, finished} = request.query;
+  let filteredBooks = [];
+  let booksUsed = [];
   const resultBooks = [];
 
-  books.map((book) => {
+  if (name) {
+    filteredBooks = books.filter((book) =>
+      book.name.toLowerCase().search(name.toLowerCase()) > -1);
+  } else if (!name) {
+    filteredBooks = books;
+  }
+
+  if (reading == 1) {
+    filteredBooks = books.filter((book) => book.reading == true);
+  } else if (reading == 0) {
+    filteredBooks = books.filter((book) => book.reading == false);
+  } else if (finished == 1) {
+    filteredBooks = books.filter((book) => book.finished == true);
+  } else if (finished == 0) {
+    filteredBooks = books.filter((book) => book.finished == false);
+  }
+
+  booksUsed = filteredBooks.length > 0 ? filteredBooks : books;
+  booksUsed.map((book) => {
     resultBooks.push({
       id: book.id,
       name: book.name,
@@ -39,4 +60,13 @@ const getBookByIdHandler = (request, h) => {
   return response;
 };
 
-module.exports = {getBooksHandler, getBookByIdHandler};
+const getBooksAllHandler = (request, h) => {
+  return {
+    status: 'success',
+    data: {
+      books: books,
+    },
+  };
+};
+
+module.exports = {getBooksHandler, getBookByIdHandler, getBooksAllHandler};
